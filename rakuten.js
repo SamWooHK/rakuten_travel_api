@@ -27,7 +27,7 @@ document.getElementById("searchtime").innerText=formatted+" "+time;
 
 const mainBlock=document.querySelector('.result');
 
-var applicationId='1098610383384043325';
+var applicationId=''; //add your applicationId
 function searchHotel(hotelId,CI,CO){
     var url='https://app.rakuten.co.jp/services/api/Travel/VacantHotelSearch/20170426?applicationId='+`${applicationId}`+'&format=json&&formatVersion=2&hotelNo='
     +`${hotelId}`+'&checkinDate='+`${CI}`+'&checkoutDate='+`${CO}`+'&adultNum=1&roomNum=1&allReturnFlag&sort=+roomCharge';
@@ -40,7 +40,7 @@ function searchHotel(hotelId,CI,CO){
         Result(res);  //取得したJSONデータを関数に渡す 
     })
     .catch((e) => {
-        create_result_block("No Result","N/A")  //エラーをキャッチし表示     
+        create_result_block("No Result","N/A");  
     })
 
     //get the plan and price  
@@ -56,26 +56,6 @@ function searchHotel(hotelId,CI,CO){
         return true;
         }
     };
-
-// loop for different hotel to get result
-const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
-
-const loop = async (CI,CO) => {
-    for (let key in hotelList){
-        // hotel name
-        var result=document.createElement("h3");
-        result.classList.add("hotelname");
-        result.classList.add("border-t");
-        result.classList.add("border-gray-200");
-        result.id=hotelList[key];
-        result.innerText=key;
-        mainBlock.appendChild(result);
-
-        searchHotel(hotelList[key],CI,CO);
-        await wait(1000);
-  }
-}
-loop(formatted,tmrCalculate(formatted))
 
 // Calculate tomorrow's date
 function tmrCalculate(ciDate){
@@ -137,3 +117,23 @@ function create_result_block(plan,price){
 
     mainBlock.appendChild(container);
 }
+
+// loop for different hotel to get result
+const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+
+const loop = async (CI,CO) => {
+    for (let key in hotelList){
+        // hotel name
+        var result=document.createElement("h3");
+        result.classList.add("hotelname");
+        result.classList.add("border-t");
+        result.classList.add("border-gray-200");
+        result.id=hotelList[key];
+        result.innerText=key;
+        mainBlock.appendChild(result);
+
+        searchHotel(hotelList[key],CI,CO);
+        await wait(1000);
+  }
+}
+loop(formatted,tmrCalculate(formatted))
